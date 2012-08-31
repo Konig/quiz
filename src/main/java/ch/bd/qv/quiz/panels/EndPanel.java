@@ -40,10 +40,10 @@ public class EndPanel extends Panel {
                 
                 
                  "function timeout(){"
-                + "alert(\"first\");"
+    /*            + "alert(\"first\");"*/
                 + "window.setTimeout(\"reload()\",5000)}"
                 + "function reload(){"
-                + "alert(\"reloading...\");"
+          /*      + "alert(\"reloading...\");"*/
                 + "window.location.reload(true);"
                 + "return}";
         response.renderJavaScript(js, "refresh-function");
