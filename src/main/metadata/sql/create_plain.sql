@@ -1,0 +1,161 @@
+delimiter $$
+
+CREATE DATABASE `qv_quiz` /*!40100 DEFAULT CHARACTER SET utf8 */$$
+delimiter $$
+
+CREATE TABLE `basequestion` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `TYPE` varchar(31) DEFAULT NULL,
+  `QUESTIONKEY` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `QUESTIONKEY` (`QUESTIONKEY`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+delimiter $$
+
+CREATE TABLE `checkquestion` (
+  `ID` bigint(20) NOT NULL,
+  PRIMARY KEY (`ID`),
+  CONSTRAINT `FK_CHECKQUESTION_ID` FOREIGN KEY (`ID`) REFERENCES `basequestion` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+delimiter $$
+
+CREATE TABLE `checkquestion_answerkeys` (
+  `CheckQuestion_ID` bigint(20) DEFAULT NULL,
+  `ANSWERKEYS` varchar(255) DEFAULT NULL,
+  KEY `FK_CheckQuestion_ANSWERKEYS_CheckQuestion_ID` (`CheckQuestion_ID`),
+  CONSTRAINT `FK_CheckQuestion_ANSWERKEYS_CheckQuestion_ID` FOREIGN KEY (`CheckQuestion_ID`) REFERENCES `basequestion` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+delimiter $$
+
+CREATE TABLE `checkquestion_rightanswerskeys` (
+  `CheckQuestion_ID` bigint(20) DEFAULT NULL,
+  `RIGHTANSWERSKEYS` varchar(255) DEFAULT NULL,
+  KEY `FK_CheckQuestion_RIGHTANSWERSKEYS_CheckQuestion_ID` (`CheckQuestion_ID`),
+  CONSTRAINT `FK_CheckQuestion_RIGHTANSWERSKEYS_CheckQuestion_ID` FOREIGN KEY (`CheckQuestion_ID`) REFERENCES `basequestion` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+delimiter $$
+
+CREATE TABLE `config` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `CONFIGKEY` varchar(255) DEFAULT NULL,
+  `CONFIGVALUE` varchar(255) DEFAULT NULL,
+  `DESCRIPTION` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+delimiter $$
+
+CREATE TABLE `freequestion` (
+  `ID` bigint(20) NOT NULL,
+  `ANSWER` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  CONSTRAINT `FK_FREEQUESTION_ID` FOREIGN KEY (`ID`) REFERENCES `basequestion` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+delimiter $$
+
+CREATE TABLE `person` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `EMAIL` varchar(255) DEFAULT NULL,
+  `FIRMA` varchar(255) NOT NULL,
+  `NAME` varchar(255) NOT NULL,
+  `TEL` varchar(255) DEFAULT NULL,
+  `VORNAME` varchar(255) NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `EMAIL` (`EMAIL`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+
+
+
+delimiter $$
+
+CREATE TABLE `quizresult` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ENDTIME` datetime DEFAULT NULL,
+  `QUIZSTATE` varchar(255) DEFAULT 'NOT_STARTED',
+  `STARTTIME` datetime DEFAULT NULL,
+  `PERSON_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_QUIZRESULT_PERSON_ID` (`PERSON_ID`),
+  CONSTRAINT `FK_QUIZRESULT_PERSON_ID` FOREIGN KEY (`PERSON_ID`) REFERENCES `person` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+delimiter $$
+
+CREATE TABLE `radioquestion` (
+  `ID` bigint(20) NOT NULL,
+  `RIGHTANSWERKEYS` varchar(255) NOT NULL,
+  PRIMARY KEY (`ID`),
+  CONSTRAINT `FK_RADIOQUESTION_ID` FOREIGN KEY (`ID`) REFERENCES `basequestion` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+delimiter $$
+
+CREATE TABLE `radioquestion_answerkeys` (
+  `RadioQuestion_ID` bigint(20) DEFAULT NULL,
+  `ANSWERKEYS` varchar(255) DEFAULT NULL,
+  KEY `FK_RadioQuestion_ANSWERKEYS_RadioQuestion_ID` (`RadioQuestion_ID`),
+  CONSTRAINT `FK_RadioQuestion_ANSWERKEYS_RadioQuestion_ID` FOREIGN KEY (`RadioQuestion_ID`) REFERENCES `basequestion` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+delimiter $$
+
+CREATE TABLE `wronganswer` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `QUESTION_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_WRONGANSWER_QUESTION_ID` (`QUESTION_ID`),
+  CONSTRAINT `FK_WRONGANSWER_QUESTION_ID` FOREIGN KEY (`QUESTION_ID`) REFERENCES `basequestion` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+delimiter $$
+
+CREATE TABLE `wronganswer_chosenanswer` (
+  `WrongAnswer_ID` bigint(20) DEFAULT NULL,
+  `CHOSENANSWER` varchar(255) DEFAULT NULL,
+  KEY `FK_WrongAnswer_CHOSENANSWER_WrongAnswer_ID` (`WrongAnswer_ID`),
+  CONSTRAINT `FK_WrongAnswer_CHOSENANSWER_WrongAnswer_ID` FOREIGN KEY (`WrongAnswer_ID`) REFERENCES `wronganswer` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+delimiter $$
+
+CREATE TABLE `qr_question_translation` (
+  `QUIZ_RESULT_ID` bigint(20) NOT NULL,
+  `QUESTION_ID` bigint(20) NOT NULL,
+  PRIMARY KEY (`QUIZ_RESULT_ID`,`QUESTION_ID`),
+  KEY `FK_QR_QUESTION_TRANSLATION_QUESTION_ID` (`QUESTION_ID`),
+  CONSTRAINT `FK_QR_QUESTION_TRANSLATION_QUIZ_RESULT_ID` FOREIGN KEY (`QUIZ_RESULT_ID`) REFERENCES `quizresult` (`ID`),
+  CONSTRAINT `FK_QR_QUESTION_TRANSLATION_QUESTION_ID` FOREIGN KEY (`QUESTION_ID`) REFERENCES `basequestion` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+delimiter $$
+
+CREATE TABLE `qr_question_wrong_translation` (
+  `QUIZ_RESULT_ID` bigint(20) NOT NULL,
+  `WRONG_ANSWER_ID` bigint(20) NOT NULL,
+  PRIMARY KEY (`QUIZ_RESULT_ID`,`WRONG_ANSWER_ID`),
+  KEY `FK_QR_QUESTION_WRONG_TRANSLATION_WRONG_ANSWER_ID` (`WRONG_ANSWER_ID`),
+  CONSTRAINT `FK_QR_QUESTION_WRONG_TRANSLATION_QUIZ_RESULT_ID` FOREIGN KEY (`QUIZ_RESULT_ID`) REFERENCES `quizresult` (`ID`),
+  CONSTRAINT `FK_QR_QUESTION_WRONG_TRANSLATION_WRONG_ANSWER_ID` FOREIGN KEY (`WRONG_ANSWER_ID`) REFERENCES `wronganswer` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+
+
