@@ -15,6 +15,7 @@
  */
 package ch.bd.qv.quiz.panels;
 
+import ch.bd.qv.quiz.app.QuizSessionData;
 import ch.bd.qv.quiz.ejb.QuestionBean;
 import ch.bd.qv.quiz.entities.RadioQuestion;
 import com.google.common.collect.Lists;
@@ -35,6 +36,8 @@ public class RadioQuestionPanel extends BaseQuestionPanel {
     
     @Inject
     private QuestionBean bean; 
+    @Inject
+    private QuizSessionData data; 
     
     private Model<String> input = new Model<>();
     private final RadioQuestion radioQuestion;
@@ -58,7 +61,7 @@ public class RadioQuestionPanel extends BaseQuestionPanel {
 
     @Override
     protected void processQuestion() {
-       bean.processRadioQuestion(radioQuestion, input.getObject());
+       bean.processRadioQuestion(data, radioQuestion, input.getObject());
     }
     
 }

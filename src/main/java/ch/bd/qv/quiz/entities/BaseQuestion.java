@@ -25,6 +25,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.NamedQuery;
 
 /**
  *
@@ -33,6 +34,7 @@ import javax.persistence.InheritanceType;
 @Entity
 @Inheritance(strategy= InheritanceType.JOINED)
 @DiscriminatorColumn(name="TYPE", discriminatorType= DiscriminatorType.STRING)
+@NamedQuery(name="getAllQuestions",query="Select x from BaseQuestion x")
 public abstract class BaseQuestion implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

@@ -50,48 +50,19 @@ public class QuizApplication extends WebApplication {
         super.init();
         //======== Enabling CDI ==========
         new CdiConfiguration(getBeanManager()).configure(this);
+        //======= remove wicket specific tags ==========
+        getMarkupSettings().setStripWicketTags(true);
         //======= Adding custom resource folders ==========
         Preconditions.checkArgument(!Strings.isNullOrEmpty(pathToResourceFolders), "path to resourcefolder cannot be null!");
         LOGGER.debug("path to resource folder: " + pathToResourceFolders);
         getResourceSettings().setResourcePollFrequency(Duration.minutes(5));
         getResourceSettings().addResourceFolder(pathToResourceFolders);
-        getResourceSettings().getStringResourceLoaders().add(new IStringResourceLoader() {
-            @Override
-            public String loadStringResource(Class<?> clazz, String key, Locale locale, String style, String variation) {
-                return lookup(key, locale);
-            }
-            
-            @Override
-            public String loadStringResource(Component component, String key, Locale locale, String style, String variation) {
-                return lookup(key, locale);
-            }
-
-            private String lookup(String key, Locale locale) {
-                FileInputStream fis = null;                
-                Properties props = new Properties();
-                try {
-                    File file = new File(pathToResourceFolders + "/QuizTranslation_" + locale.getLanguage() + ".properties");
-                    fis = new FileInputStream(file);                    
-                    props.load(fis);
-//                    LOGGER.debug("looking for "+key + " in file: "+file.getAbsolutePath());
-                    return (String) props.get(key);
-                } catch (IOException ioex) {
-                    LOGGER.warn("cannot access file with locale "+locale, ioex);
-                    return null;                    
-                } finally {
-                    Closeables.closeQuietly(fis);
-                }
-                
-                
-            }
-        });
+        //disable exception on unknown keys; 
+        getResourceSettings().setThrowExceptionOnMissingResource(false);
+        getResourceSettings().getStringResourceLoaders().add(new SimplePropertyResourceLoader(pathToResourceFolders));
         Preconditions.checkArgument(new File(pathToResourceFolders).exists());
-
-//        for(Locale loc : supportedLocales)
-//        {
-//            String lang = loc.getLanguage().toLowerCase(); 
-//            getResourceSettings().getStringResourceLoaders().add(new BundleStringResourceLoader("Quiz"));
-//        }
+        //======= mounts ============
+        // admin page
         mountPage("/admin", AdminPage.class);
     }
     
@@ -99,7 +70,7 @@ public class QuizApplication extends WebApplication {
         try {
             return (BeanManager) new InitialContext().lookup("java:comp/BeanManager");
         } catch (NamingException ne) {
-            throw new IllegalStateException("cannot continue without beanmanager, check server. ARE YOU TRYING TO RUN THIS APP ON A TOMCAT?", ne);
+            throw new IllegalStateException("cannot continue without beanmanager, check server. ARE YOU TRYING TO RUN THIS APP ON A SERVLET-ONLY CONTAINER?", ne);
         }
     }
 }

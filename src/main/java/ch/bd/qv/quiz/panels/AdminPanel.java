@@ -54,7 +54,7 @@ public class AdminPanel extends Panel
                 List<FileUpload> uploads = fup.getConvertedInput();
                 try
                 {
-                uploadBean.upload(uploads.get(0).getBytes());
+                uploadBean.purgeAndUpload(uploads.get(0).getBytes());
                 }catch(Exception e)
                 {
                     AdminPanel.this.get("feedback").error(Throwables.getStackTraceAsString(e));

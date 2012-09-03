@@ -18,6 +18,7 @@ package ch.bd.qv.quiz.ejb;
 import ch.bd.qv.quiz.entities.BaseQuestion;
 import ch.bd.qv.quiz.entities.CheckQuestion;
 import ch.bd.qv.quiz.entities.FreeQuestion;
+import ch.bd.qv.quiz.entities.QuizResult;
 import ch.bd.qv.quiz.entities.RadioQuestion;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
@@ -49,7 +50,8 @@ public class UploadBean {
     private EntityManager em;
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void upload(byte[] bytes) {
+    public void purgeAndUpload(byte[] bytes) {
+        truncateTables();
         String inputfile = new String(bytes, Charset.forName("UTF-8"));
         Iterable<String> lines = Splitter.on("\n").omitEmptyStrings().trimResults(CharMatcher.INVISIBLE).split(inputfile);
         for (String line : lines) {
@@ -100,5 +102,15 @@ public class UploadBean {
     private void commonOperationAndPersist(BaseQuestion bq, String key) {
         bq.setQuestionKey(key);
         em.persist(bq);
+    }
+    
+    private void truncateTables()
+    {
+        String[] tables = new String[]{"QuizResult", "WrongAnswer","BaseQuestion"};
+        for(String table: tables)
+        {
+            em.createQuery(String.format("delete from %s",table)).executeUpdate();
+        }
+        
     }
 }

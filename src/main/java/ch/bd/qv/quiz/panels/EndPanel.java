@@ -20,7 +20,7 @@ import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
- *
+ * the final panel.
  * @author thierry
  */
 public class EndPanel extends Panel {
@@ -29,21 +29,17 @@ public class EndPanel extends Panel {
 
     public EndPanel(String id) {
         super(id);
-
-
     }
 
     @Override
     public void renderHead(IHeaderResponse response) {
+        // refresh the page after 7 seconds
+        // first try was to insert this js into the markup, didn't work. gkw
         super.renderHead(response);
         String js =
-                
-                
-                 "function timeout(){"
-    /*            + "alert(\"first\");"*/
-                + "window.setTimeout(\"reload()\",5000)}"
+                "function timeout(){"
+                + "window.setTimeout(\"reload()\",7000)}"
                 + "function reload(){"
-          /*      + "alert(\"reloading...\");"*/
                 + "window.location.reload(true);"
                 + "return}";
         response.renderJavaScript(js, "refresh-function");
@@ -52,6 +48,7 @@ public class EndPanel extends Panel {
 
     @Override
     protected void onAfterRender() {
+        //after rendering, we remove the session. next interaction will display the langpanel
         getSession().invalidateNow();
         super.onAfterRender();
     }

@@ -16,7 +16,6 @@
 package ch.bd.qv.quiz.panels;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
@@ -30,7 +29,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.LoadableDetachableModel;
 
 /**
- *
+ * displays dynamically a list of configurated languages
  * @author thierry
  */
 public class LangPanel extends Panel {

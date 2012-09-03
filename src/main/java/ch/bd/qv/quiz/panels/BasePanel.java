@@ -32,7 +32,6 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.LoadableDetachableModel;
@@ -119,6 +118,9 @@ public class BasePanel extends Panel {
         }
     }
 
+    /**
+     * drives the navigation from panel to panel. each panel has a enum, each question a number 0-x
+     */
     public void driveNavigation() {
         switch (data.getNavigation()) {
             case LANG:
@@ -127,7 +129,7 @@ public class BasePanel extends Panel {
                 form.addOrReplace(new DataPanel("swapPanel"));
                 break;
             case BASE_DATA:
-                personBean.storePersonAndInitQuizResult((Person) ((DataPanel) form.get("swapPanel")).getDefaultModelObject());
+                personBean.storePersonAndInitQuizResult(data,(Person) ((DataPanel) form.get("swapPanel")).getDefaultModelObject());
                 LOGGER.debug("NAVIGATION:  data => question 0");
                 data.setNavigation(NavigationEnum.QUESTION);
                 driveQuestionNavigation(data.getQuestions().get(0));
@@ -136,7 +138,7 @@ public class BasePanel extends Panel {
             case QUESTION:
                 ((BaseQuestionPanel) form.get("swapPanel")).processQuestion();
                 if (data.getQuestionNo() == data.getQuestions().size()) {
-                    questionBean.endQuiz();
+                    questionBean.endQuiz(data);
                     LOGGER.debug("NAVIGATION:  Question: " + data.getQuestionNo() + " => END");
                     data.setNavigation(NavigationEnum.END);
                     form.addOrReplace(new EndPanel("swapPanel"));

@@ -20,6 +20,7 @@ import ch.bd.qv.quiz.entities.Person;
 import ch.bd.qv.quiz.entities.QuizResult;
 import com.google.common.base.Preconditions;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -36,28 +37,22 @@ import org.apache.log4j.Logger;
  * @author thierry
  */
 @LocalBean
-@Stateless
+@Stateful
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class PersonBean {
-    
-    
+
     private static final Logger LOGGER = Logger.getLogger(PersonBean.class);
     @Inject
-    private QuizSessionData data;
-    
-    
-    @Inject
-    private QuestionBean questionBean; 
-    
+    private QuestionBean questionBean;
     @PersistenceContext
     private EntityManager em;
-    
+
     public Person getPersonByEmail(String email) {
         return em.createNamedQuery("getByEmail", Person.class).setParameter("email", email).getSingleResult();
     }
-    
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Person store(Person p) {
+    public Person store( Person p) {
         Preconditions.checkNotNull(p);
         if (p.getId() == null || p.getId() == 0L) {
             em.persist(p);
@@ -66,11 +61,11 @@ public class PersonBean {
             return em.merge(p);
         }
     }
-    
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void storePersonAndInitQuizResult(Person p) {
+    public void storePersonAndInitQuizResult(QuizSessionData data, Person p) {
         store(p);
-        questionBean.startQuiz(p);
+        questionBean.startQuiz(data, p);
     }
 
     /**

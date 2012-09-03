@@ -36,10 +36,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import javax.ejb.LocalBean;
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
@@ -48,8 +47,7 @@ import org.apache.log4j.Logger;
  *
  * @author thierry
  */
-//muss stateful sein wegen cdi injection (QuizResult ist ein state)
-@Stateful
+@Stateless
 @LocalBean
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class QuestionBean {
@@ -57,8 +55,6 @@ public class QuestionBean {
     private static final Logger LOGGER = Logger.getLogger(QuestionBean.class);
     @PersistenceContext
     private EntityManager em;
-    @Inject
-    private QuizSessionData data;
     private Random random = new SecureRandom();
 
     public List<BaseQuestion> getRandomizedQuestions(int radio, int check, int free) {
@@ -66,7 +62,7 @@ public class QuestionBean {
         result.addAll(getRadioQuestions(radio));
         result.addAll(getCheckQuestions(check));
         result.addAll(getFreeQuestions(free));
-        Collections.shuffle(result);
+        Collections.shuffle(result, random);
         LOGGER.debug("result list: " + Joiner.on(":").join(result));
         return result;
     }
@@ -112,33 +108,33 @@ public class QuestionBean {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void processRadioQuestion(RadioQuestion radio, String chosen) {
+    public void processRadioQuestion(QuizSessionData data, RadioQuestion radio, String chosen) {
         if (!radio.getRightAnswerKeys().contains(chosen)) {
-            addWrongAnswer(radio, chosen);
+            addWrongAnswer(data, radio, chosen);
         }
-        storeQuizResult();
+        storeQuizResult(data);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void processFreeQuestion(FreeQuestion free, String chosen) {
+    public void processFreeQuestion(QuizSessionData data, FreeQuestion free, String chosen) {
         if (!free.getAnswer().equalsIgnoreCase(chosen.trim())) {
             LOGGER.debug("wrong input:|" + chosen + "| right: |" + free.getAnswer() + "|");
-            addWrongAnswer(free, chosen);
+            addWrongAnswer(data,free, chosen);
         }
-        storeQuizResult();
+        storeQuizResult(data);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void processCheckQuestion(CheckQuestion check, Set<String> chosenElements) {
+    public void processCheckQuestion(QuizSessionData data, CheckQuestion check, Set<String> chosenElements) {
         if (!check.getRightAnswersKeys().containsAll(chosenElements)) {
             LOGGER.debug("chosen: " + Joiner.on(":").join(chosenElements));
             LOGGER.debug("right: " + Joiner.on(":").join(check.getRightAnswersKeys()));
-            addWrongAnswer(check, chosenElements.toArray(new String[chosenElements.size()]));
+            addWrongAnswer(data,check, chosenElements.toArray(new String[chosenElements.size()]));
         }
-        storeQuizResult();
+        storeQuizResult(data);
     }
 
-    private void addWrongAnswer(BaseQuestion bq, String... items) {
+    private void addWrongAnswer(QuizSessionData data, BaseQuestion bq, String... items) {
         WrongAnswer wa = new WrongAnswer();
         wa.getChosenAnswer().addAll(Arrays.asList(items));
         wa.setQuestion(bq);
@@ -146,20 +142,20 @@ public class QuestionBean {
         em.persist(wa);
     }
 
-    private void storeQuizResult() {
+    private void storeQuizResult(QuizSessionData data) {
         data.getResult().setQuizState(QuizStateEnum.STARTED);
         data.setResult(em.merge(data.getResult()));
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void endQuiz() {
+    public void endQuiz(QuizSessionData data) {
         data.getResult().setQuizState(QuizStateEnum.FINISHED);
         data.getResult().setEndTime(Calendar.getInstance());
         data.setResult(em.merge(data.getResult()));
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void startQuiz(Person person) {
+    public void startQuiz(QuizSessionData data, Person person) {
         QuizResult qr = new QuizResult();
         qr.setPerson(person);
         data.setResult(qr);
@@ -168,5 +164,10 @@ public class QuestionBean {
         data.getResult().setQuizState(QuizStateEnum.NOT_STARTED);
         data.getResult().setStartTime(Calendar.getInstance());
         data.setResult(em.merge(data.getResult()));
+    }
+    
+    public List<BaseQuestion> getAllQuestions()
+    {
+        return em.createNamedQuery("getAllQuestions", BaseQuestion.class).getResultList(); 
     }
 }

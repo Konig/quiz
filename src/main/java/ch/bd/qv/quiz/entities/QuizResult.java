@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -49,13 +50,13 @@ public class QuizResult implements Serializable {
     @JoinColumn
     private Person person;
     
-    @ManyToMany
+    @ManyToMany(cascade= CascadeType.ALL)
     @JoinTable(name = "QR_QUESTION_TRANSLATION", joinColumns =
     @JoinColumn(name = "QUIZ_RESULT_ID"), inverseJoinColumns =
     @JoinColumn(name = "QUESTION_ID"))
     private List<BaseQuestion> questions = new ArrayList<>();
     
-    @ManyToMany
+    @ManyToMany(cascade= CascadeType.ALL)
     @JoinTable(name = "QR_QUESTION_WRONG_TRANSLATION", joinColumns =
     @JoinColumn(name = "QUIZ_RESULT_ID"), inverseJoinColumns =
     @JoinColumn(name = "WRONG_ANSWER_ID"))
@@ -118,10 +119,6 @@ public class QuizResult implements Serializable {
     public void setEndTime(Calendar endTime) {
         this.endTime = endTime;
     }
-
-    
-    
-    
     
     public Long getId() {
         return id;

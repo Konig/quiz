@@ -15,6 +15,7 @@
  */
 package ch.bd.qv.quiz.panels;
 
+import ch.bd.qv.quiz.app.QuizSessionData;
 import ch.bd.qv.quiz.ejb.QuestionBean;
 import ch.bd.qv.quiz.entities.FreeQuestion;
 import javax.inject.Inject;
@@ -29,6 +30,8 @@ public class FreeQuestionPanel extends BaseQuestionPanel{
     
     @Inject
     private QuestionBean questionBean; 
+    @Inject
+    private QuizSessionData data; 
     private  FreeQuestion freeQuestion;
     private Model<String> model = new Model<>(); 
 
@@ -42,7 +45,7 @@ public class FreeQuestionPanel extends BaseQuestionPanel{
 
     @Override
     protected void processQuestion() {
-        questionBean.processFreeQuestion(freeQuestion, model.getObject());
+        questionBean.processFreeQuestion(data, freeQuestion, model.getObject());
     }
     
 }

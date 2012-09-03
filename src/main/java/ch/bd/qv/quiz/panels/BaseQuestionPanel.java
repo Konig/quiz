@@ -24,17 +24,19 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 
 /**
- *
+ * BasequestionPanel with two common labels and markup
  * @author thierry
  */
 public abstract class BaseQuestionPanel extends Panel {
     
+    //session data
     @Inject
     private QuizSessionData data; 
 
     public BaseQuestionPanel(String id, BaseQuestion bq) {
         super(id);
-        add(new Label("legend", new StringResourceModel("legend.frage",BaseQuestionPanel.this,null,data.getQuestionNo()+1,data.getQuestions().size())));
+        add(new Label("legend", new StringResourceModel("legend.frage",
+                BaseQuestionPanel.this,null,data.getQuestionNo()+1,data.getQuestions().size())));
         add(new Label("question", new ResourceModel(bq.getQuestionKey())));
 
     }

@@ -26,7 +26,8 @@ import javax.annotation.PreDestroy;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * data object for one run
+ * contains the navigation, the questions and the result
  * @author thierry
  */
 @SessionScoped

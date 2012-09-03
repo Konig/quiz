@@ -1,0 +1,12 @@
+FREE;free.question.one;Decision
+FREE;free.question.two;Grün
+FREE;free.question.threee;Doof
+FREE;free.question.four;Drei
+RADIO;radio.question.one;radio.question.answer.one.1,radio.question.answer.one.2,radio.question.answer.one.3,radio.question.answer.one.4;radio.question.answer.one.5
+RADIO;radio.question.two;radio.question.answer.two.1,radio.question.answer.two.2;radio.question.answer.two.1
+RADIO;radio.question.three;radio.question.answer.three.1,radio.question.answer.three.2,radio.question.answer.three.3;radio.question.answer.three.1
+RADIO;radio.question.four;radio.question.answer.four.1,radio.question.answer.four.2,radio.question.answer.four.3;radio.question.answer.four.1
+CHECK;check.question.one;check.question.answer.one.1,check.question.answer.one.2,check.question.answer.one.3,check.question.answer.one.4;check.question.answer.one.1,check.question.answer.one.2
+CHECK;check.question.two;check.question.answer.two.1,check.question.answer.two.2;check.question.answer.two.1
+CHECK;check.question.three;check.question.answer.three.1,check.question.answer.three.2,check.question.answer.three.3;check.question.answer.three.1,check.question.answer.three.2
+CHECK;check.question.four;check.question.answer.four.1,check.question.answer.four.2,check.question.answer.four.3;check.question.answer.four.1

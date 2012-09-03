@@ -15,6 +15,7 @@
  */
 package ch.bd.qv.quiz.panels;
 
+import ch.bd.qv.quiz.app.QuizSessionData;
 import ch.bd.qv.quiz.ejb.QuestionBean;
 import ch.bd.qv.quiz.entities.CheckQuestion;
 import com.google.common.collect.Lists;
@@ -28,20 +29,25 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 
 /**
- *
+ * displays a checkboxmultiplechoice field (multiple possible answers)
  * @author thierry
  */
 public class CheckQuestionPanel extends BaseQuestionPanel {
 
+    // resources
     @Inject
     private QuestionBean questionBean;
+    @Inject
+    private QuizSessionData data; 
+    //members
     private CheckQuestion checkQuestion;
     private IModel<Set<String>> model = new Model();
 
     public CheckQuestionPanel(String inner, CheckQuestion bq) {
         super(inner, bq);
         this.checkQuestion = bq;
-        add(new CheckBoxMultipleChoice<>("checkboxes", model, Lists.newArrayList(checkQuestion.getAnswerKeys().iterator()), new IChoiceRenderer<String>() {
+        add(new CheckBoxMultipleChoice<>("checkboxes", model, Lists.newArrayList(
+                checkQuestion.getAnswerKeys().iterator()), new IChoiceRenderer<String>() {
             @Override
             public Object getDisplayValue(String object) {
                 return new StringResourceModel(object, CheckQuestionPanel.this, null).getObject();
@@ -56,6 +62,6 @@ public class CheckQuestionPanel extends BaseQuestionPanel {
 
     @Override
     protected void processQuestion() {
-        questionBean.processCheckQuestion(checkQuestion, Sets.newHashSet(model.getObject()));
+        questionBean.processCheckQuestion(data, checkQuestion, Sets.newHashSet(model.getObject()));
     }
 }

@@ -22,7 +22,6 @@ import org.apache.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -30,7 +29,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
 
 /**
  *
@@ -67,6 +65,10 @@ public class DataPanel extends Panel {
 
     }
 
+    /**
+     * displays the label in red, if the fc is invalid. the border does not 
+     * provide any explicit markup
+     */
     public static class FcBorder extends Border {
         
         private FormComponent fc; 

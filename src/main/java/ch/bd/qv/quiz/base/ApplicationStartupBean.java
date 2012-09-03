@@ -56,7 +56,7 @@ public class ApplicationStartupBean {
                 ConfigKeys.NO_OF_FREE_QUESTION).getConfigValue()), "freequestions not defined! Hint: positive Integer");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(configBean.getConfigForKey(
                 ConfigKeys.NO_OF_RADIO_QUESTION).getConfigValue()), "radioquestions not defined! Hint: positive Integer");
-        LOGGER.info("application startup suceeded. ");
+        LOGGER.info("verify passed ");
     }
 
     @PostConstruct
@@ -66,6 +66,7 @@ public class ApplicationStartupBean {
             PropertyConfigurator.configureAndWatch(configBean.getConfigForKey(ConfigKeys.LOG4J_PROPERTIES).getConfigValue());
             LOGGER = Logger.getLogger(ApplicationStartupBean.class);
             verify();
+            LOGGER.info("application startup suceeded. ");
         } catch (Exception e) {
             if (LOGGER == null) {
                 System.err.println("Exception while loading app. APP WILL NOT WORK CORRECTLY! CHECK log4j properties");
