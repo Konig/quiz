@@ -18,7 +18,6 @@ package ch.bd.qv.quiz.ejb;
 import ch.bd.qv.quiz.entities.BaseQuestion;
 import ch.bd.qv.quiz.entities.CheckQuestion;
 import ch.bd.qv.quiz.entities.FreeQuestion;
-import ch.bd.qv.quiz.entities.QuizResult;
 import ch.bd.qv.quiz.entities.RadioQuestion;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
@@ -37,7 +36,7 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * defines the operations with the csv upload (question loading)
  * @author thierry
  */
 @Stateless
@@ -49,6 +48,12 @@ public class UploadBean {
     @PersistenceContext
     private EntityManager em;
 
+    /**
+     * purge the current question database and reloads it. This operation is 
+     * transaction which means, if the new questions cannot be inserted, a rollback
+     * is commited and the old data will be restored. 
+     * @param bytes a csv file
+     */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void purgeAndUpload(byte[] bytes) {
         truncateTables();
@@ -76,6 +81,9 @@ public class UploadBean {
         }
     }
 
+    /**
+     * insert a radio question
+     */
     private void makeRadioQuestion(List<String> question) {
         Preconditions.checkArgument(question.size() == 4);
         RadioQuestion rq = new RadioQuestion();
@@ -84,6 +92,9 @@ public class UploadBean {
         commonOperationAndPersist(rq, question.get(1));
     }
 
+    /**
+     * insert a check question
+     */
     private void makeCheckQuestion(List<String> question) {
         Preconditions.checkArgument(question.size() == 4);
         CheckQuestion cq = new CheckQuestion();
@@ -92,6 +103,9 @@ public class UploadBean {
         commonOperationAndPersist(cq, question.get(1));
     }
 
+    /**
+     * insert a free question
+     */
     private void makeFreeQuestion(List<String> question) {
         Preconditions.checkArgument(question.size() == 3);
         FreeQuestion fq = new FreeQuestion();
@@ -99,11 +113,17 @@ public class UploadBean {
         commonOperationAndPersist(fq, question.get(1));
     }
 
+    /**
+     * persist the question 
+     */
     private void commonOperationAndPersist(BaseQuestion bq, String key) {
         bq.setQuestionKey(key);
         em.persist(bq);
     }
     
+    /**
+     * delete all quizResults, the WrongAnswers and all Questions
+     */
     private void truncateTables()
     {
         String[] tables = new String[]{"QuizResult", "WrongAnswer","BaseQuestion"};

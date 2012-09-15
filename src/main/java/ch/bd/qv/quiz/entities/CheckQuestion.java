@@ -25,7 +25,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 /**
- *
+ * a question with 2 or more possible answers and one or more right answers
  * @author thierry
  */
 @Entity

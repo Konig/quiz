@@ -23,7 +23,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
 /**
- *
+ * future control bean. exposes operations to control the application. For example:
+ * <ul>
+ * <li>Configuration reload</li>
+ * <li>Resources reload</li>
+ * <li>Cache eviction</li>
+ * <li>gatekeeper events (enabling/disabling application)</li>
+ * <li>...</li>
+ * </ul>
  * @author thierry
  */
 @Stateless

@@ -16,7 +16,7 @@
 package ch.bd.qv.quiz.entities;
 
 /**
- *
+ * all possible question types
  * @author thierry
  */
 public enum QuestionTypeEnum {

@@ -28,7 +28,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.NamedQuery;
 
 /**
- *
+ * baseQuestion with common data for all types. 
  * @author thierry
  */
 @Entity

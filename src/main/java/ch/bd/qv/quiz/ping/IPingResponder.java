@@ -22,6 +22,9 @@ import java.util.List;
  * @author thierry
  */
 public interface IPingResponder {
+    /**
+     * true if the module is working
+     */
     boolean isValid();
     /**
      * returns the answer String, each line one string

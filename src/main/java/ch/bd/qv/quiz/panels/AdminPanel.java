@@ -17,7 +17,6 @@ package ch.bd.qv.quiz.panels;
 
 import ch.bd.qv.quiz.ejb.UploadBean;
 import com.google.common.base.Throwables;
-import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -33,30 +32,26 @@ import org.apache.wicket.model.Model;
  *
  * @author thierry
  */
-public class AdminPanel extends Panel 
-{
-     @Inject
-     private UploadBean uploadBean; 
-    
-    private FileUploadField fup; 
-    public AdminPanel(String id)
-    {
+public class AdminPanel extends Panel {
+
+    @Inject
+    private UploadBean uploadBean;
+    private FileUploadField fup;
+
+    public AdminPanel(String id) {
         super(id);
         add(new FeedbackPanel("feedback"));
         Form form = new Form("form");
         form.setMultiPart(true);
-        form.add(fup = new FileUploadField("fileupload",new Model()));
+        form.add(fup = new FileUploadField("fileupload", new Model()));
         fup.setRequired(true);
         form.add(new AjaxSubmitLink("submit") {
-
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 List<FileUpload> uploads = fup.getConvertedInput();
-                try
-                {
-                uploadBean.purgeAndUpload(uploads.get(0).getBytes());
-                }catch(Exception e)
-                {
+                try {
+                    uploadBean.purgeAndUpload(uploads.get(0).getBytes());
+                } catch (Exception e) {
                     AdminPanel.this.get("feedback").error(Throwables.getStackTraceAsString(e));
                 }
                 target.add(findParent(AdminPanel.class));
@@ -64,10 +59,9 @@ public class AdminPanel extends Panel
 
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
-               target.add(findParent(AdminPanel.class));
+                target.add(findParent(AdminPanel.class));
             }
         });
         add(form);
     }
-    
 }

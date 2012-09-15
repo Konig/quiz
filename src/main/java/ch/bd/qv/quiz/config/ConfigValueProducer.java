@@ -18,7 +18,6 @@ package ch.bd.qv.quiz.config;
 import ch.bd.qv.quiz.ejb.ConfigBean;
 import ch.bd.qv.quiz.entities.Config;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;

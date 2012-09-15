@@ -18,6 +18,7 @@ package ch.bd.qv.quiz.entities;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,7 +28,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
- *
+ * WrongAnswer: one or more answers to a question are wrong. any given 
+ * answers will be stored in the chosenanswers. 
  * @author thierry
  */
 @Entity

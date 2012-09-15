@@ -23,7 +23,8 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 
 /**
- * checks the configuration for consistency type: ManagedBean
+ * checks the configuration for consistency 
+ * type: ManagedBean
  *
  * @author thierry
  */

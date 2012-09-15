@@ -19,7 +19,7 @@ import ch.bd.qv.quiz.panels.AdminPanel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
- *
+ * administrator page. 
  * @author thierry
  */
 public class AdminPage extends HomePage {

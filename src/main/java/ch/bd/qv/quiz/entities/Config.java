@@ -23,7 +23,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 
 /**
- *
+ * configuration object with key/value/description tuples
  * @author thierry
  */
 @Entity

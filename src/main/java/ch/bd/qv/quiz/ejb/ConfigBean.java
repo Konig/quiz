@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
+ * Configuration operations
  *
  * @author thierry
  */
@@ -35,6 +36,10 @@ public class ConfigBean {
     @PersistenceContext
     private EntityManager em;
 
+    /**
+     * gets a configuration depending on the key. every call will be made directly
+     * to the database to prevent reading stale data from the cache.
+     */
     public Config getConfigForKey(String key) {
         return em.createNamedQuery("getByKey", Config.class).setParameter("key", key)
                 .setHint("javax.persistence.cache.storeMode", "REFRESH").getSingleResult();

@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 
 /**
- *
+ * displays the question and a textfield for the answer. 
  * @author thierry
  */
 public class FreeQuestionPanel extends BaseQuestionPanel{

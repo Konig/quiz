@@ -16,7 +16,9 @@
 package ch.bd.qv.quiz.config;
 
 /**
- *
+ * reloads the configuration. is currently meaningless with this configuration
+ * handling approach. may be used if the commons configuration hashmap from apache
+ * is used. that approach would be more efficient but more complicated to handle. 
  * @author thierry
  */
 public class ReloadConfigEvent {

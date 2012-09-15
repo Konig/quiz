@@ -17,11 +17,9 @@ package ch.bd.qv.quiz.ejb;
 
 import ch.bd.qv.quiz.app.QuizSessionData;
 import ch.bd.qv.quiz.entities.Person;
-import ch.bd.qv.quiz.entities.QuizResult;
 import com.google.common.base.Preconditions;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
@@ -33,7 +31,7 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * exposes all operations for manipulating a person
  * @author thierry
  */
 @LocalBean
@@ -51,6 +49,9 @@ public class PersonBean {
         return em.createNamedQuery("getByEmail", Person.class).setParameter("email", email).getSingleResult();
     }
 
+    /**
+     * persist or merge the person
+     */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Person store( Person p) {
         Preconditions.checkNotNull(p);
@@ -62,6 +63,9 @@ public class PersonBean {
         }
     }
 
+    /**
+     * init the person and the quiz
+     */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void storePersonAndInitQuizResult(QuizSessionData data, Person p) {
         store(p);

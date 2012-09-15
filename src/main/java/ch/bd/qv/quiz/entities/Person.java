@@ -24,7 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 
 /**
- *
+ * a person with base data such as tel/email/name/givenName/firma
  * @author thierry
  */
 @Entity

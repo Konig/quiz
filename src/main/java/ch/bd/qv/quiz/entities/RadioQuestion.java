@@ -26,13 +26,15 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 /**
+ * several possible answers, one is right.
  *
  * @author thierry
  */
 @Entity
 @DiscriminatorValue("RADIO")
-@NamedQueries({@NamedQuery(name="countRadioQuestion", query = "Select Count (x) from RadioQuestion x "),
-    @NamedQuery(name="getRadioQuestion", query = "Select x from RadioQuestion x ")})
+@NamedQueries({
+    @NamedQuery(name = "countRadioQuestion", query = "Select Count (x) from RadioQuestion x "),
+    @NamedQuery(name = "getRadioQuestion", query = "Select x from RadioQuestion x ")})
 public class RadioQuestion extends BaseQuestion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -57,9 +59,6 @@ public class RadioQuestion extends BaseQuestion implements Serializable {
         this.rightAnswerKeys = rightAnswerKeys;
     }
 
-    
-    
-    
     @Override
     public int hashCode() {
         int hash = 0;

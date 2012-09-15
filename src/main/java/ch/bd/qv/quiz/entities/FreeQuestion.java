@@ -22,7 +22,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 /**
- *
+ * a question with a freetext answer field. check will be made with trim().equalsIgnoreCase()
  * @author thierry
  */
 @Entity

@@ -27,7 +27,9 @@ import org.apache.log4j.Logger;
 
 /**
  * data object for one run
- * contains the navigation, the questions and the result
+ * contains the navigation, the questions and the result.
+ * is in fact the replacement for the wicket session object. 
+ * 
  * @author thierry
  */
 @SessionScoped

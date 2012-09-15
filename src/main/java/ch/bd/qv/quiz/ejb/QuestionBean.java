@@ -44,7 +44,7 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * exposes all operations for manipulating the questions
  * @author thierry
  */
 @Stateless
@@ -57,6 +57,13 @@ public class QuestionBean {
     private EntityManager em;
     private Random random = new SecureRandom();
 
+    /**
+     * produces a randomized question list 
+     * @param radio no of radio questions
+     * @param check no of check questions
+     * @param free no of free questions
+     * @return a list of questions objects
+     */
     public List<BaseQuestion> getRandomizedQuestions(int radio, int check, int free) {
         List<BaseQuestion> result = new ArrayList<>();
         result.addAll(getRadioQuestions(radio));
@@ -67,18 +74,43 @@ public class QuestionBean {
         return result;
     }
 
+    /**
+     * facade for radioQuestions. returns a specified number of radioQuestions
+     * @param radio
+     * @return 
+     */
     public List<RadioQuestion> getRadioQuestions(int radio) {
         return getQuestions(RadioQuestion.class, radio);
     }
 
+    /**
+     * facade for checkQuestion. returns a specified number of checkQuestions
+     */
     public List<CheckQuestion> getCheckQuestions(int check) {
         return getQuestions(CheckQuestion.class, check);
     }
 
+    /**
+     * facade for freeQuestions, returns a specified
+     * @param free
+     * @return 
+     */
     public List<FreeQuestion> getFreeQuestions(int free) {
         return getQuestions(FreeQuestion.class, free);
     }
 
+    /**
+     * generic methodc to obtain questions. 
+     * Contract: a simpleName of a Type must have a corresponding NamedQuery 
+     * <ul>
+     * <li>countSimpleName which returns the totalnumber found of this type</li> 
+     * <li>getSimpleName which returns one question based on the index</li>
+     * </ul>
+     * @param <T> the concrete class type: radioQuestion, free etc. 
+     * @param type the class
+     * @param noOfQuestions number of questions desired
+     * @return a list of questions or a illegalargumentexception for maxresult > integer.max
+     */
     private <T extends BaseQuestion> List<T> getQuestions(Class<T> type, int noOfQuestions) {
         if (noOfQuestions == 0) {
             return new ArrayList<>();
@@ -97,6 +129,11 @@ public class QuestionBean {
         return resultList;
     }
 
+    /**
+     * generates a unique numberset from 0 - max with a size of amount
+     * @param amount the size of the numberset
+     * @param max the upper bound 
+     */
     private Set<Integer> getUniqueRandomNumbers(int amount, int max) {
         Preconditions.checkArgument(max >= amount, "amount: " + amount + " max: " + max);
         Set<Integer> results = new HashSet<>();
@@ -115,6 +152,9 @@ public class QuestionBean {
         storeQuizResult(data);
     }
 
+    /**
+     * checks the freeQuestion, adds a wrong answer in case of a failure
+     */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void processFreeQuestion(QuizSessionData data, FreeQuestion free, String chosen) {
         if (!free.getAnswer().equalsIgnoreCase(chosen.trim())) {
@@ -124,6 +164,9 @@ public class QuestionBean {
         storeQuizResult(data);
     }
 
+    /**
+     * checks the checkQuestion, adds a wrong answer in case of a failure
+     */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void processCheckQuestion(QuizSessionData data, CheckQuestion check, Set<String> chosenElements) {
         if (!check.getRightAnswersKeys().containsAll(chosenElements)) {
@@ -134,6 +177,9 @@ public class QuestionBean {
         storeQuizResult(data);
     }
 
+    /**
+     * add a wrong answer with one or more given solutions
+     */
     private void addWrongAnswer(QuizSessionData data, BaseQuestion bq, String... items) {
         WrongAnswer wa = new WrongAnswer();
         wa.getChosenAnswer().addAll(Arrays.asList(items));
@@ -142,11 +188,17 @@ public class QuestionBean {
         em.persist(wa);
     }
 
+    /**
+     * sets the state on started after each processed question
+     */
     private void storeQuizResult(QuizSessionData data) {
         data.getResult().setQuizState(QuizStateEnum.STARTED);
         data.setResult(em.merge(data.getResult()));
     }
 
+    /**
+     * ends the quiz. set the finishdate and the state
+     */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void endQuiz(QuizSessionData data) {
         data.getResult().setQuizState(QuizStateEnum.FINISHED);
@@ -154,6 +206,9 @@ public class QuestionBean {
         data.setResult(em.merge(data.getResult()));
     }
 
+    /**
+     * starts a quiz. set start date, state, person and questions
+     */
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void startQuiz(QuizSessionData data, Person person) {
         QuizResult qr = new QuizResult();
@@ -166,6 +221,9 @@ public class QuestionBean {
         data.setResult(em.merge(data.getResult()));
     }
     
+    /**
+     * loads all questions. use with care
+     */
     public List<BaseQuestion> getAllQuestions()
     {
         return em.createNamedQuery("getAllQuestions", BaseQuestion.class).getResultList(); 

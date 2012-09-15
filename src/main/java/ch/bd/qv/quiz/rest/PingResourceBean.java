@@ -34,7 +34,8 @@ import javax.ws.rs.core.MediaType;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * searches for all implemented IPingResponders and calls them. The overall state
+ * will be determined with an and operation of all responders. 
  * @author thierry
  */
 @Stateless

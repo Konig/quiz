@@ -50,13 +50,13 @@ public class QuizResult implements Serializable {
     @JoinColumn
     private Person person;
     
-    @ManyToMany(cascade= CascadeType.ALL)
+    @ManyToMany(cascade= CascadeType.REMOVE)
     @JoinTable(name = "QR_QUESTION_TRANSLATION", joinColumns =
     @JoinColumn(name = "QUIZ_RESULT_ID"), inverseJoinColumns =
     @JoinColumn(name = "QUESTION_ID"))
     private List<BaseQuestion> questions = new ArrayList<>();
     
-    @ManyToMany(cascade= CascadeType.ALL)
+    @ManyToMany(cascade= CascadeType.REMOVE)
     @JoinTable(name = "QR_QUESTION_WRONG_TRANSLATION", joinColumns =
     @JoinColumn(name = "QUIZ_RESULT_ID"), inverseJoinColumns =
     @JoinColumn(name = "WRONG_ANSWER_ID"))
